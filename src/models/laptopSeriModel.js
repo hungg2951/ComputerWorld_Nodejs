@@ -1,9 +1,17 @@
 import mongoose from "mongoose";
 import slug from "mongoose-slug-updater";
 mongoose.plugin(slug);
-const BrandSchema = new mongoose.Schema(
+const LaptopSeriSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
+    brand_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Brand",
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
     slug: {
       type: String,
       unique: true,
@@ -12,12 +20,8 @@ const BrandSchema = new mongoose.Schema(
       slugOn: true, // tự động cập nhật slug theo "name" khi "name" thay đổi
       slug: "name",
     },
-    laptop_type_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "LaptopType",
-      required:true
-    }
   },
   { timestamps: true }
 );
-export default mongoose.model("Brand", BrandSchema);
+
+export default mongoose.model("LaptopSeris", LaptopSeriSchema);

@@ -4,7 +4,7 @@ import { getUser, getUsers, removeUser, updateUser } from "../controllers/userCo
 const router = Router();
 
 router.get("/users", getUsers )
-router.get("/get-user", getUser )
-router.delete("/remove-user", removeUser )
-router.put("/update-user", updateUser )
+router.get("/user", getUser )
+router.delete("/user", removeUser )
+router.patch("/user", updateUser )
 export default router;
