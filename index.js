@@ -7,14 +7,12 @@ import laptopTypeRoute from './src/routes/laptopTypeRoute.js';
 import laptopSeriRoute from './src/routes/laptopSeriRoute.js';
 import productRoute from './src/routes/productRoute.js';
 import productDetailRoute from './src/routes/productDetailRoute.js';
-
+import cors from 'cors'
 const app = express();
-
-// Middleware xử lý dữ liệu
+app.use(cors())
 app.use(express.json());
-// Import routes
 
-// Sử dụng route
+//route
 app.use("/api", userRoute);
 app.use("/api", authRoute);
 app.use("/api", authRoute);
@@ -27,7 +25,7 @@ mongoose
   .connect("mongodb://localhost:27017/test2025")
   .then(() => console.log("Kết nối MongoDB thành công!"))
   .catch((error) => console.error("Lỗi kết nối MongoDB:", error));
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server đang chạy trên cổng ${PORT}`);
 });
