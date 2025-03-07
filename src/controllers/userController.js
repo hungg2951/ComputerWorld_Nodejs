@@ -1,10 +1,10 @@
-import { name } from "ejs";
 import User from "../models/userModel.js";
 
 export const getUsers = async (req, res) => {
   try {
-    const user = await User.find();
-    res.json(user);
+    const user = await User.find().select("-password")
+    
+    res.status(200).json(user);
   } catch (error) {
     res.status(400).json({
       message: "Không tìm được danh sách tài khoản người dừng",
@@ -44,14 +44,10 @@ export const updateUser = async (req, res) => {
   try {
     if (!existUser)
       return res.status(400).json({ message: "Tài khoản không tồn tại" });
-    await User.findOneAndUpdate(
-      { _id: req.body.id },
-      req.body,
-      { new: true }
-    );
+    await User.findOneAndUpdate({ _id: req.body.id }, req.body, { new: true });
     res.status(200).json({
       message: "Cập nhật tài khoản thành công",
-      existUser
+      existUser,
     });
   } catch (error) {}
 };
