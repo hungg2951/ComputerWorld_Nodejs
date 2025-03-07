@@ -12,45 +12,48 @@ export const create = async (req, res) => {
 
 // update a laptop type
 export const update = async (req, res) => {
-    try {
-        const laptopType = await laptopTypeModel.findOneAndUpdate(
-        {_id:req.body.id},
-        req.body,
-        { new: true }
-        );
-        res.status(200).json(laptopType);
-    } catch (error) {
-        res.status(400).json({ message: error.message, error });
-    }
-}
+  try {
+    const laptopType = await laptopTypeModel.findOneAndUpdate(
+      { _id: req.body.id },
+      req.body,
+      { new: true }
+    );
+    res.status(200).json(laptopType);
+  } catch (error) {
+    res.status(400).json({ message: error.message, error });
+  }
+};
 
 // delete a laptop type
 export const remove = async (req, res) => {
-    try {
-        const laptopType = await laptopTypeModel.findOneAndDelete({ _id: req.body.id });
-        res.status(200).json({
-            message: "Xóa loại laptop thành công",
-            laptopType,
-        });} catch (error) {
-            res.status(400).json({ message: error.message, error });
-        }
-    }
+  try {
+    const laptopType = await laptopTypeModel.findOneAndDelete({
+      _id: req.body.id,
+    });
+    res.status(200).json({
+      message: "Xóa loại laptop thành công",
+      laptopType,
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message, error });
+  }
+};
 // get all laptop types
 export const getAll = async (req, res) => {
-    try {
-        const laptopTypes = await laptopTypeModel.find();
-        res.status(200).json(laptopTypes);
-    } catch (error) {
-        res.status(400).json({ message: error.message, error });
-    }
-}
+  try {
+    const laptopTypes = await laptopTypeModel.find().sort({ createdAt: -1 });
+    res.status(200).json(laptopTypes);
+  } catch (error) {
+    res.status(400).json({ message: error.message, error });
+  }
+};
 
 // get a laptop type by id
 export const getById = async (req, res) => {
-    try {
-        const laptopType = await laptopTypeModel.findOne({ _id: req.body.id });
-        res.status(200).json(laptopType);
-    } catch (error) {
-        res.status(400).json({ message: error.message, error });
-    }
-}
+  try {
+    const laptopType = await laptopTypeModel.findById(req.query.id);
+    res.status(200).json(laptopType);
+  } catch (error) {
+    res.status(400).json({ message: error.message, error });
+  }
+};

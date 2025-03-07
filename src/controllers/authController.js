@@ -13,6 +13,11 @@ export const Login = async (req, res) => {
         message: "Tài khoản không tồn tại",
       });
     }
+    if(!user.status){
+      return res.status(400).json({
+        message: "Tài khoản đã bị vô hiệu hóa",
+      });
+    }
     const checkPass = bcrypt.compareSync(req.body.password, user.password);
     if (!checkPass) {
       return res.status(400).json({
