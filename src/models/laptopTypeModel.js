@@ -6,7 +6,7 @@ const LaptopTypeSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      
+      unique: true
     },
     slug: {
         type: String,
@@ -16,6 +16,7 @@ const LaptopTypeSchema = new mongoose.Schema(
         slugOn: true,
         slug: "name",
       },
+      desc:{typeo:String}
   },
   { timestamps: true }
 );

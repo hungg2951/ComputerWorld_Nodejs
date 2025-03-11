@@ -3,6 +3,11 @@ import laptopTypeModel from "../models/laptopTypeModel.js";
 // create a new laptop type
 export const create = async (req, res) => {
   try {
+    const existLaptopType = await laptopTypeModel.findOne({
+      name: req.body.name,
+    });
+    if (existLaptopType)
+      return res.status(400).json({ message: "Loại laptop tồn tại" });
     const laptopType = await new laptopTypeModel(req.body).save();
     res.status(201).json(laptopType);
   } catch (error) {
@@ -13,6 +18,11 @@ export const create = async (req, res) => {
 // update a laptop type
 export const update = async (req, res) => {
   try {
+    const existLaptopType = await laptopTypeModel.findOne({
+      name: req.body.name,
+    });
+    if (existLaptopType)
+      return res.status(400).json({ message: "Loại laptop tồn tại" });
     const laptopType = await laptopTypeModel.findOneAndUpdate(
       { _id: req.body.id },
       req.body,

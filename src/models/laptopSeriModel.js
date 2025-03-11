@@ -7,6 +7,7 @@ const LaptopSeriSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Brand",
       required: true,
+      unique: true
     },
     name: {
       type: String,
@@ -24,4 +25,4 @@ const LaptopSeriSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("LaptopSeris", LaptopSeriSchema);
+export default mongoose.model("LaptopSeries", LaptopSeriSchema);

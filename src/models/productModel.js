@@ -4,10 +4,20 @@ import ProductDetail from './productDetailModel.js'
 mongoose.plugin(slug);
 const ProductSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true }, // Tên sản phẩm
-    laptop_series_id: {
+    name: { type: String, required: true,unique:true }, // Tên sản phẩm
+    series_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "LaptopSeris",
+      ref: "LaptopSeries",
+      required: true,
+    },
+    brand_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Brand",
+      required: true,
+    },
+    type_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "LaptopType",
       required: true,
     },
     slug: {

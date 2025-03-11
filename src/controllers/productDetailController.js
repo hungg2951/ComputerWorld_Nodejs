@@ -89,24 +89,31 @@ export const getAll = async (req, res) => {
   }
 };
 // get by id product
-export const getById = async (req, res) => {
-  const exist = await productDetailModel.findOne({ _id: req.body.id });
-  if (!exist)
-    return res
-      .status(400)
-      .json({ message: "Không tìm thấy chi tiết sản phẩm nào" });
+export const getProductDetailsByProduct = async(req,res)=>{
   try {
-    const product = await productDetailModel
-      .findOne({ _id: req.body.id })
-      .populate("product_id");
-    res.status(200).json({
-      message: "get product detail success!",
-      product,
-    });
+    const data = await productDetailModel.find({product_id:req.params.id_product}).populate("product_id")
+    if(!data) return res.status(400).json({message:"Product details does not exist!!"})
+    return res.status(200).json({
+      message:"Get product details success !",
+      data
+    })
   } catch (error) {
-    res.status(400).json({
-      message: "get product detail error !",
-      error,
-    });
+    res.status(400).json({message:"Get product details error!!"})
   }
-};
+}
+
+export const getOneProductDetail = async (req,res)=>{
+  console.log(req);
+  try {
+    const data = await productDetailModel.findOne({_id:req.params.id}).populate("product_id")
+    if(!data) return res.status(400).json({message:"Product detail does not exist!!"})
+    return res.status(200).json({
+      message:"Get product detail success !",
+      data
+    })
+  } catch (error) {
+    console.log(error);
+    
+    res.status(400).json({message:"Get product detail error!!"})
+  }
+}

@@ -3,7 +3,7 @@ import slug from "mongoose-slug-updater";
 mongoose.plugin(slug);
 const BrandSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true },
     slug: {
       type: String,
       unique: true,
@@ -12,11 +12,7 @@ const BrandSchema = new mongoose.Schema(
       slugOn: true, // tự động cập nhật slug theo "name" khi "name" thay đổi
       slug: "name",
     },
-    laptop_type_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "LaptopType",
-      required:true
-    }
+    logo: { type: String },
   },
   { timestamps: true }
 );

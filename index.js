@@ -7,6 +7,7 @@ import laptopTypeRoute from './src/routes/laptopTypeRoute.js';
 import laptopSeriRoute from './src/routes/laptopSeriRoute.js';
 import productRoute from './src/routes/productRoute.js';
 import productDetailRoute from './src/routes/productDetailRoute.js';
+import uploadRoute from './src/routes/upload.js';
 import cors from 'cors'
 const app = express();
 app.use(cors())
@@ -21,6 +22,7 @@ app.use("/api", laptopTypeRoute);
 app.use("/api", laptopSeriRoute);
 app.use("/api", productRoute);
 app.use("/api", productDetailRoute);
+app.use("/api/upload", uploadRoute);
 mongoose
   .connect("mongodb://localhost:27017/test2025")
   .then(() => console.log("Kết nối MongoDB thành công!"))
