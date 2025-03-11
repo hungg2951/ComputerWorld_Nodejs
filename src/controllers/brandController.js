@@ -31,8 +31,10 @@ export const getBrand = async (req, res) => {
 };
 
 export const updateBrand = async (req, res) => {
+
+  const { id, name } = req.body;
   try {
-    const existBrand = await brandModel.findOne({ name: req.body.name });
+    const existBrand = await brandModel.findOne({ name, _id: { $ne: id } });
     if (existBrand)
       return res.status(400).json({ message: "Thương hiệu tồn tại" });
     const brand = await brandModel.findOneAndUpdate(

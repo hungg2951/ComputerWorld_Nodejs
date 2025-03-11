@@ -1,3 +1,4 @@
+import brandModel from "../models/brandModel.js";
 import productDetailModel from "../models/productDetailModel.js";
 
 // create product
@@ -29,7 +30,7 @@ export const update = async (req, res) => {
       .json({ message: "Không tìm thấy chi tiết sản phẩm để update" });
   try {
     const existProductDetail = await productDetailModel.findOne({
-      name: req.body.name,
+      name: req.body.name,_id:{$ne:req.body.id}
     });
     if (existProductDetail)
       return res.status(400).json({ message: "Tên sản phẩm tồn tại" });
@@ -137,3 +138,22 @@ export const getOneProductDetail = async (req, res) => {
     res.status(400).json({ message: "Get product detail error!!" });
   }
 };
+
+export const getProductByBrand = async(req,res)=>{
+  try {
+    const { slug } = req.params;
+
+    // Tìm brand_id từ slug
+    const brand = await brandModel.findOne({ slug });
+    if (!brand) {
+      return res.status(404).json({ message: "Thương hiệu không tồn tại!" });
+    }
+
+    // Tìm các sản phẩm có cùng brand_id
+    const products = await productDetailModel.find({ brand_id: brand._id }).populate("product_id");
+
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi server" });
+  }
+}

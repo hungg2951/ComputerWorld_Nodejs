@@ -18,11 +18,12 @@ export const create = async (req, res) => {
 //update laptop seri
 export const update = async (req, res) => {
   try {
-    const existLaptopseries = await laptopSeriModel.findOne({
+    const existLaptopSeries = await laptopSeriModel.findOne({
       name: req.body.name,
+      _id: { $ne: req.body.id },
     });
-    if (existLaptopseries)
-      return res.status(400).json({ message: "Dòng laptop tồn tại" });
+    if (existLaptopSeries)
+      return res.status(400).json({ message: "Loại laptop tồn tại" });
     const laptopSeri = await laptopSeriModel.findOneAndUpdate(
       { _id: req.body.id },
       req.body,

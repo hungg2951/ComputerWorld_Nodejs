@@ -7,11 +7,11 @@ const LaptopSeriSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Brand",
       required: true,
-      unique: true
     },
     name: {
       type: String,
       required: true,
+      unique: true
     },
     slug: {
       type: String,

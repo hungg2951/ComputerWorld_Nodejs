@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { create, getAll, getById, remove, update } from "../controllers/laptopSeriConller.js";
+import { create, getAll, getById, remove, update } from "../controllers/laptopSeriController.js";
 
 const router = Router();
 

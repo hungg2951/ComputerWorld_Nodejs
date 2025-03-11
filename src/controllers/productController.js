@@ -27,7 +27,7 @@ export const update = async (req, res) => {
       .json({ message: "Không tìm thấy sản phẩm để update" });
 
   try {
-    const existProduct = await productModel.findOne({ name: req.body.name });
+    const existProduct = await productModel.findOne({ name: req.body.name,_id:{$ne:req.body.id} });
     if (existProduct)
       return res.status(400).json({ message: "Tên sản phẩm này đã tồn tại" });
     const product = await productModel.findOneAndUpdate(

@@ -19,7 +19,7 @@ export const create = async (req, res) => {
 export const update = async (req, res) => {
   try {
     const existLaptopType = await laptopTypeModel.findOne({
-      name: req.body.name,
+      name: req.body.name,_id:{$ne:req.body.id}
     });
     if (existLaptopType)
       return res.status(400).json({ message: "Loại laptop tồn tại" });
