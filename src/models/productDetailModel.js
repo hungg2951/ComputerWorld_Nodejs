@@ -7,7 +7,7 @@ const ProductDetailSchema = new mongoose.Schema(
       ref: "Products",
       required: true,
     }, // Tham chiếu đến bảng Product
-    name: { type: String, required: true }, // tên rút gọn "i7 14650HX RAM 16GB SSD 1TB RTX 4060 16" 2.5K 165Hz"
+    name: { type: String, required: true,unique:true }, // tên rút gọn "i7 14650HX RAM 16GB SSD 1TB RTX 4060 16" 2.5K 165Hz"
     cpu: { type: String, required: true }, // CPU (Intel Core i7, Ryzen 7, v.v.)
     ram: { type: String, required: true }, // Dung lượng RAM (8GB, 16GB, 32GB)
     storage: { type: String, required: true }, // Ổ cứng (SSD 512GB, HDD 1TB)
