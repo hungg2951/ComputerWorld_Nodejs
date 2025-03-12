@@ -21,7 +21,7 @@ const ProductDetailSchema = new mongoose.Schema(
     os: { type: String, default: "Windows 11" }, // Hệ điều hành mặc định
     warranty: { type: Number, default: 12 }, // Bảo hành (tháng)
     stock: { type: Number, default: 0 }, // Số lượng trong kho
-    description: { type: String },
+    description: { type: String ,default:""},
     status: { type: String, default: "new" },
     slug: {
       type: String,

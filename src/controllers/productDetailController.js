@@ -1,6 +1,6 @@
 import brandModel from "../models/brandModel.js";
 import productDetailModel from "../models/productDetailModel.js";
-
+import productModel from "../models/productModel.js";
 // create product
 export const create = async (req, res) => {
   try {
@@ -71,7 +71,9 @@ export const remove = async (req, res) => {
 export const getAll = async (req, res) => {
   //"product_id",{path:"laptop_series_id"}
   try {
-    const productDetail = await productDetailModel.find().populate("product_id")
+    const productDetail = await productDetailModel
+      .find()
+      .populate("product_id");
     res.status(200).json({
       message: "Get all products detail success !",
       productDetail,
@@ -122,7 +124,7 @@ export const getOneProductDetail = async (req, res) => {
   }
 };
 
-export const getProductByBrand = async(req,res)=>{
+export const getProductByBrand = async (req, res) => {
   try {
     const { slug } = req.params;
 
@@ -133,10 +135,37 @@ export const getProductByBrand = async(req,res)=>{
     }
 
     // Tìm các sản phẩm có cùng brand_id
-    const products = await productDetailModel.find({ brand_id: brand._id }).populate("product_id");
+    const products = await productDetailModel
+      .find({ brand_id: brand._id })
+      .populate("product_id");
 
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: "Lỗi server" });
   }
-}
+};
+
+export const getProductDetailsBySeries = async (req, res) => {
+  try {
+    const { series_id } = req.params; // Nhận series_id từ request
+    //Lấy danh sách tất cả Product có cùng series_id
+    const products = await productModel.find({ series_id }).select("_id");
+    const productIds = products.map((product) => product._id); // Lấy danh sách product_id
+
+    if (productIds.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy sản phẩm nào trong series này!" });
+    }
+
+    //Tìm tất cả ProductDetail có product_id trong danh sách trên
+    const productDetails = await productDetailModel.find({
+      product_id: { $in: productIds },
+    });
+    const filteredProducts  = productDetails.filter((item) => item.stock > 0);
+    return res.json({ success: true, data: filteredProducts });
+  } catch (error) {
+    console.error("Lỗi khi lấy ProductDetail theo series_id:", error);
+    return res.status(500).json({ message: "Lỗi server!" });
+  }
+};
