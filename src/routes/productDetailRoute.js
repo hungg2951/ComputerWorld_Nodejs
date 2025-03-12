@@ -5,7 +5,7 @@ const router = Router()
 
 router.get("/products-detail",getAll)
 router.get("/product-detail-by-product/:id_product",getProductDetailsByProduct)
-router.get("/product-detail/:id",getOneProductDetail)
+router.get("/product-detail/:slug",getOneProductDetail)
 router.get("/product-detail/brand/:slug",getProductByBrand)
 router.post("/product-detail",create)
 router.patch("/product-detail",update)

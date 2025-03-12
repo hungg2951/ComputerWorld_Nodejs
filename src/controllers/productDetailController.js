@@ -29,11 +29,6 @@ export const update = async (req, res) => {
       .status(400)
       .json({ message: "Không tìm thấy chi tiết sản phẩm để update" });
   try {
-    const existProductDetail = await productDetailModel.findOne({
-      name: req.body.name,_id:{$ne:req.body.id}
-    });
-    if (existProductDetail)
-      return res.status(400).json({ message: "Tên sản phẩm tồn tại" });
     const product = await productDetailModel.findOneAndUpdate(
       { _id: req.body.id },
       req.body,
@@ -76,18 +71,7 @@ export const remove = async (req, res) => {
 export const getAll = async (req, res) => {
   //"product_id",{path:"laptop_series_id"}
   try {
-    const productDetail = await productDetailModel.find().populate({
-      path: "product_id",
-      populate: {
-        path: "laptop_series_id",
-        populate: {
-          path: "brand_id",
-          populate: {
-            path: "laptop_type_id",
-          },
-        },
-      },
-    });
+    const productDetail = await productDetailModel.find().populate("product_id")
     res.status(200).json({
       message: "Get all products detail success !",
       productDetail,
@@ -119,10 +103,9 @@ export const getProductDetailsByProduct = async (req, res) => {
 };
 
 export const getOneProductDetail = async (req, res) => {
-  console.log(req);
   try {
     const data = await productDetailModel
-      .findOne({ _id: req.params.id })
+      .findOne({ slug: req.params.slug })
       .populate("product_id");
     if (!data)
       return res
