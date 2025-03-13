@@ -28,10 +28,7 @@ const OderDetailSchema = mongoose.Schema(
     total: { //Tổng tiền của mục này (price * quantity)
       type: Number,
       required: true,
-    },
-    discount: { //Giảm giá trên sản phẩm (nếu có)
-      type: Number,
-    },
+    }
   },
   { timestamp: true }
 );
