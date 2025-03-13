@@ -7,6 +7,8 @@ import laptopTypeRoute from './src/routes/laptopTypeRoute.js';
 import laptopSeriRoute from './src/routes/laptopSeriRoute.js';
 import productRoute from './src/routes/productRoute.js';
 import productDetailRoute from './src/routes/productDetailRoute.js';
+import OrderRoute from './src/routes/orderRoute.js';
+import OrderDetailRoute from './src/routes/orderDetailRoute.js';
 import uploadRoute from './src/routes/upload.js';
 import cors from 'cors'
 const app = express();
@@ -22,6 +24,8 @@ app.use("/api", laptopTypeRoute);
 app.use("/api", laptopSeriRoute);
 app.use("/api", productRoute);
 app.use("/api", productDetailRoute);
+app.use("/api",OrderRoute);
+app.use("/api",OrderDetailRoute);
 app.use("/api/upload", uploadRoute);
 mongoose
   .connect("mongodb://localhost:27017/test2025")
