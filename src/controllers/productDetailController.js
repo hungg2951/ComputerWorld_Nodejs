@@ -73,7 +73,12 @@ export const getAll = async (req, res) => {
   try {
     const productDetail = await productDetailModel
       .find()
-      .populate("product_id");
+      .populate({
+        path:"product_id",
+        populate:{
+          path:"type_id",
+        }
+      })
     res.status(200).json({
       message: "Get all products detail success !",
       productDetail,
@@ -162,10 +167,41 @@ export const getProductDetailsBySeries = async (req, res) => {
     const productDetails = await productDetailModel.find({
       product_id: { $in: productIds },
     });
-    const filteredProducts  = productDetails.filter((item) => item.stock > 0);
+    const filteredProducts = productDetails.filter((item) => item.stock > 0);
     return res.json({ success: true, data: filteredProducts });
   } catch (error) {
     console.error("Lỗi khi lấy ProductDetail theo series_id:", error);
     return res.status(500).json({ message: "Lỗi server!" });
+  }
+};
+
+export const searchProductDetail = async (req, res) => {
+  console.log("🚀 ~ searchProductDetail ~ req.body:", req.body);
+  try {
+    const { query } = req.body;
+    if (!query)
+      return res.status(400).json({ message: "Missing search query" });
+
+    // Tìm product theo name
+    const products = await productModel.find({
+      name: { $regex: query, $options: "i" },
+    });
+
+    // Lấy danh sách productId từ các sản phẩm tìm được
+    const productIds = products.map((product) => product._id);
+
+    // Tìm productDetail có name khớp hoặc có productId thuộc danh sách trên
+    const productDetails = await productDetailModel
+      .find({
+        $or: [
+          { name: { $regex: query, $options: "i" } },
+          { product_id: { $in: productIds } },
+        ],
+      })
+      .populate("product_id");
+
+    res.json({ productDetails });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };

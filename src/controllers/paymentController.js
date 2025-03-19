@@ -1,18 +1,19 @@
 import axios from "axios";
 import crypto from "crypto";
 import ordersModel from "../models/ordersModel.js";
-
 var accessKey = "F8BBA842ECF85";
 var secretKey = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
 var orderInfo = "pay with MoMo";
 var partnerCode = "MOMO";
+const ipnUrlAPI = "https://2d28-2001-ee0-8202-a255-5cd7-b28d-f15b-a424.ngrok-free.app"
 export const payment = async (req, res) => {
+  const { total_price, payment_method } = req.body;
+
   var redirectUrl = "http://localhost:5173/checkout";
-  var ipnUrl =
-    "https://2efd-2001-ee0-8202-a255-2ce3-8730-577b-6ca9.ngrok-free.app/api/callback";
+  var ipnUrl = `${ipnUrlAPI}/api/callback`
   var requestType = "captureWallet";
-  var amount = "50000";
-  var orderId = partnerCode + new Date().getTime();
+  var amount = total_price;
+  var orderId = "ComputerWorld" + new Date().getTime();
   var requestId = orderId;
   var extraData = "";
   var orderGroupId = "";
@@ -68,6 +69,14 @@ export const payment = async (req, res) => {
   });
 
   try {
+    const newOrder = await ordersModel.create({
+      ...req.body,
+      total_price,
+      payment_status: "pending",
+      payment_method,
+      orderId
+    });
+
     const result = await axios.post(
       "https://test-payment.momo.vn/v2/gateway/api/create",
       requestBody,
@@ -78,7 +87,18 @@ export const payment = async (req, res) => {
         timeout: 10000, // tránh lỗi mạng
       }
     );
-    return res.status(200).json(result.data);
+    if (result.data.payUrl) {
+      return res.json({
+        success: true,
+        paymentUrl: result.data.payUrl,
+        orderId,
+        newOrder,
+      });
+    }
+
+    res
+      .status(400)
+      .json({ success: false, message: "Không lấy được URL thanh toán" });
   } catch (error) {
     res.status(400).json(error);
   }
@@ -88,15 +108,21 @@ export const callback = async (req, res) => {
   try {
     const { orderId, resultCode, transId, message } = req.body;
     console.log(req.body);
-    let status = "failed"; // Mặc định nếu giao dịch thất bại
+    let payment_status = "failed"; // Mặc định nếu giao dịch thất bại
 
     if (resultCode === 0) {
-      status = "paid"; // Thành công
+      payment_status = "paid"; // Thành công
     } else if (resultCode === 1006 && transId) {
-      status = "pending"; // Đang chờ xử lý
+      payment_status = "pending"; // Đang chờ xử lý
     }
-    await ordersModel.findOneAndUpdate({ orderId }, { status, transId });
-    res.json({ success: true, message: `Trạng thái đơn hàng: ${status}` });
+    await ordersModel.findOneAndUpdate(
+      { orderId },
+      { payment_status, transId }
+    );
+    res.json({
+      success: true,
+      message: `Trạng thái đơn hàng: ${payment_status}`,
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: "Lỗi xử lý IPN", error });
   }
