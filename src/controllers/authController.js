@@ -2,6 +2,7 @@ import userModel from "../models/userModel.js";
 import "dotenv/config";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import { sendMaill } from "./sendMailController.js";
 
 // đăng nhập
 export const Login = async (req, res) => {
@@ -12,7 +13,7 @@ export const Login = async (req, res) => {
         message: "Tài khoản không tồn tại",
       });
     }
-    if(!user.status){
+    if (!user.status) {
       return res.status(400).json({
         message: "Tài khoản đã bị vô hiệu hóa",
       });
@@ -30,7 +31,7 @@ export const Login = async (req, res) => {
     return res.status(200).json({
       message: "Đăng nhập thành công",
       access_token: access_token,
-      user
+      user,
     });
   } catch (error) {
     res.status(400).json({
@@ -48,6 +49,16 @@ export const signUp = async (req, res) => {
       });
     } else {
       const signUp = await new userModel(req.body).save();
+      await sendMaill({
+        email: req.body.email,
+        subject: "ĐĂNG KÝ TÀI KHOẢN THÀNH CÔNG",
+        html: `<H1>Chúc mừng bạn đã đăng ký tài khoản thành công tại ComputerWourld</H1>
+        <p>Thông tin tài khoản của bạn là:</p>
+        <p>Email: ${req.body.email}</p>
+        <p>Mật khẩu: ${req.body.password}</p>
+        <p>Vui lòng không chia sẻ thông tin tài khoản của bạn cho bất kỳ ai</p>
+        `,
+      });
       res.status(200).json({
         message: "Đăng ký thành công",
         id: signUp._id,
