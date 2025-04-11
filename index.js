@@ -11,6 +11,7 @@ import OrderRoute from './src/routes/orderRoute.js';
 import OrderDetailRoute from './src/routes/orderDetailRoute.js';
 import uploadRoute from './src/routes/upload.js';
 import paymentRoute from './src/routes/paymentRoute.js';
+import voucherRoute from './src/routes/voucherRoute.js';
 import cors from 'cors'
 import 'dotenv/config'
 const app = express();
@@ -30,6 +31,7 @@ app.use("/api",OrderRoute);
 app.use("/api",OrderDetailRoute);
 app.use("/api/upload", uploadRoute);
 app.use("/api", paymentRoute);
+app.use("/api", voucherRoute);
 mongoose
   .connect(process.env.DB_URL)
   .then(() => console.log("Kết nối MongoDB thành công!"))
