@@ -12,6 +12,7 @@ import OrderDetailRoute from './src/routes/orderDetailRoute.js';
 import uploadRoute from './src/routes/upload.js';
 import paymentRoute from './src/routes/paymentRoute.js';
 import cors from 'cors'
+import 'dotenv/config'
 const app = express();
 app.use(cors())
 app.use(express.json());
@@ -30,7 +31,7 @@ app.use("/api",OrderDetailRoute);
 app.use("/api/upload", uploadRoute);
 app.use("/api", paymentRoute);
 mongoose
-  .connect("mongodb://localhost:27017/test2025")
+  .connect(process.env.DB_URL)
   .then(() => console.log("Kết nối MongoDB thành công!"))
   .catch((error) => console.error("Lỗi kết nối MongoDB:", error));
 const PORT = process.env.PORT || 8000;
