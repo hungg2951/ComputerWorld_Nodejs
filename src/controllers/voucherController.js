@@ -95,11 +95,9 @@ export const applyVoucher = async (req, res) => {
     }
 
     if (voucher.minOrderValue && orderTotal < voucher.minOrderValue) {
-      return res
-        .status(400)
-        .json({
-          message: `Đơn hàng phải từ ${voucher.minOrderValue.toLocaleString()} mới dùng được voucher này`,
-        });
+      return res.status(400).json({
+        message: `Đơn hàng phải từ ${voucher.minOrderValue.toLocaleString()} mới dùng được voucher này`,
+      });
     }
 
     // Tính giá trị giảm
@@ -113,7 +111,7 @@ export const applyVoucher = async (req, res) => {
       discount = voucher.discountValue;
     }
 
-    res.json({ discount, message: "Áp dụng mã giảm giá thành công" });
+    res.json({ voucher, discount, message: "Áp dụng mã giảm giá thành công" });
   } catch (error) {
     res.status(500).json({ message: "Lỗi khi áp dụng mã giảm giá", error });
   }

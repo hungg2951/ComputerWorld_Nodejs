@@ -5,7 +5,7 @@ const router = Router();
 router.post('/voucher', createVoucher);
 router.get('/vouchers', getAllVouchers);
 router.get('/voucher/:code', getVoucherByCode);
-router.put('/voucher', updateVoucher);
+router.patch('/voucher', updateVoucher);
 router.delete('/voucher', deleteVoucher);
 router.post('/voucher/apply', applyVoucher);
 
