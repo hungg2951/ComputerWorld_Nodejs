@@ -111,8 +111,39 @@ export const applyVoucher = async (req, res) => {
       discount = voucher.discountValue;
     }
 
-    res.json({ voucher, discount, message: "Áp dụng mã giảm giá thành công" });
+    res.json({ code, discount, message: "Áp dụng mã giảm giá thành công" });
   } catch (error) {
     res.status(500).json({ message: "Lỗi khi áp dụng mã giảm giá", error });
+  }
+};
+
+export const useVoucher = async (req, res) => {
+  const { code,userId } = req.body;
+
+  try {
+    const voucher = await Voucher.findOne({ code });
+
+    if (!voucher)
+      return res.status(404).json({ message: "Voucher không tồn tại" });
+
+    // Kiểm tra đã dùng chưa
+    if (voucher.usersUsed.includes(userId)) {
+      return res.status(400).json({ message: "Bạn đã sử dụng voucher này" });
+    }
+
+    if (voucher.usedCount >= voucher.quantity) {
+      return res
+        .status(400)
+        .json({ message: "mã giảm giá đã hết lượt sử dụng" });
+    }
+
+    // Thêm userId vào usersUsed, tăng usedCount
+    voucher.usersUsed.push(userId);
+    voucher.usedCount += 1;
+    await voucher.save();
+
+    res.json({ message: "Áp dụng voucher thành công", voucher });
+  } catch (err) {
+    res.status(500).json({ message: "Lỗi server", error: err.message });
   }
 };
