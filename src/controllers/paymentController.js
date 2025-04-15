@@ -1,16 +1,17 @@
 import axios from "axios";
 import crypto from "crypto";
 import ordersModel from "../models/ordersModel.js";
+import "dotenv/config";
 var accessKey = "F8BBA842ECF85";
 var secretKey = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
 var orderInfo = "pay with MoMo";
 var partnerCode = "MOMO";
-const ipnUrlAPI = "https://2d28-2001-ee0-8202-a255-5cd7-b28d-f15b-a424.ngrok-free.app"
 export const payment = async (req, res) => {
   const { total_price, payment_method } = req.body;
-
+  console.log(process.env.IPNURLAPI);
+  
   var redirectUrl = "http://localhost:5173/checkout";
-  var ipnUrl = `${ipnUrlAPI}/api/callback`
+  var ipnUrl = `${process.env.IPNURLAPI}/api/callback`;
   var requestType = "captureWallet";
   var amount = total_price;
   var orderId = "ComputerWorld" + new Date().getTime();
@@ -74,7 +75,7 @@ export const payment = async (req, res) => {
       total_price,
       payment_status: "pending",
       payment_method,
-      orderId
+      orderId,
     });
 
     const result = await axios.post(
@@ -107,17 +108,21 @@ export const payment = async (req, res) => {
 export const callback = async (req, res) => {
   try {
     const { orderId, resultCode, transId, message } = req.body;
-    console.log(req.body);
+    console.log("callback");
     let payment_status = "failed"; // Mặc định nếu giao dịch thất bại
-
+    let status = "pending";
     if (resultCode === 0) {
       payment_status = "paid"; // Thành công
-    } else if (resultCode === 1006 && transId) {
-      payment_status = "pending"; // Đang chờ xử lý
+    }
+    // else if (resultCode === 1006 && transId) {
+    //   payment_status = "pending"; // Đang chờ xử lý
+    // }
+    else {
+      status = "cancel";
     }
     await ordersModel.findOneAndUpdate(
       { orderId },
-      { payment_status, transId }
+      { payment_status, transId, status }
     );
     res.json({
       success: true,
