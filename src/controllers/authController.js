@@ -51,7 +51,7 @@ export const signUp = async (req, res) => {
       const signUp = await new userModel(req.body).save();
       await sendMaill({
         email: req.body.email,
-        subject: "ĐĂNG KÝ TÀI KHOẢN THÀNH CÔNG",
+        subject: "[THÔNG BÁO] ĐĂNG KÝ TÀI KHOẢN THÀNH CÔNG",
         html: `<H1>Chúc mừng bạn ${req.body.name} đã đăng ký tài khoản thành công tại ComputerWourld</H1>
         <p>Thông tin tài khoản của bạn là:</p>
         <p>Email: ${req.body.email}</p>
