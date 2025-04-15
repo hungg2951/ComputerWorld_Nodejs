@@ -15,7 +15,7 @@ export const getUsers = async (req, res) => {
 export const getUser = async (req, res) => {
   try {
     const user = await User.findOne({ _id: req.body.id });
-    res.json(user);
+    res.status(200).json(user);
   } catch (error) {
     res.status(400).json({
       message: "Không tìm được tài khoản người dừng",
